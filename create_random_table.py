@@ -8,9 +8,6 @@ import os
 
 start = timeit.default_timer()
 
-# #### Random year & month
-
-# In[2]:
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -20,69 +17,65 @@ if not os.path.isfile('std.csv') :
         writer = csv.writer(f)
         writer.writerow(tosave)
 
-for run_times in range(1):
+# #### Create month table
+def get_score(weekday_name):
+#     print(weekday_name)
+    day_score = []
+    for name in weekday_name:
+        if name == 'Saturday' :
+            day_score.append(5)
+        elif name == 'Friday':
+            day_score.append(4)
+        elif name == 'Sunday':
+            day_score.append(3)
+        elif name == 'Tuesday' or name =='Thursday' :
+            day_score.append(2)
+        else:
+            day_score.append(1)
+    return day_score
+
+def create_table(start, end):
+    df = pd.DataFrame({'Date': pd.date_range(start, end)})
+    df['Day'] = df.Date.dt.weekday_name
+    df['Score'] = get_score(df.Date.dt.weekday_name)
+    df['Blue'] = 'NA'
+    df['Red'] = 'NA'
+    df['Silver'] = 'NA'
+    df['Gold'] = 'NA'
+    return df
+
+def employee_schedule(start, end, empl_list):
+    df = pd.DataFrame({'Date': pd.date_range(start, end)})
+    for emp in empl_list:
+        df[emp[0]] = 0
+    return df
+
+def update_df_emp(teams, empl_choice, loc, score, df_emp):
+
+    for empl in empl_list:
+        if empl == empl_choice:
+            df_emp.loc[loc,empl[0]] += score*teams
+
+    return df_emp
+
+for run_times in range(100000):
+    # #### Random year & month
     year = random.randint(1970,2100)
     month = random.randint(1,12)
-    # print("Year :" , year," Month: ",month)
 
     #no of days
     start_day, no_of_days = calendar.monthrange(year, month)
     start_day = (calendar.day_name[start_day])
-    # print("No. of days: ", no_of_days)
-    # print("Starting day of the week: ", start_day)
-
-
-    # #### Create month table
-
-    # In[3]:
-
-
-    def get_score(weekday_name):
-    #     print(weekday_name)
-        day_score = []
-        for name in weekday_name:
-            if name == 'Saturday' :
-                day_score.append(5)
-            elif name == 'Friday':
-                day_score.append(4)
-            elif name == 'Sunday':
-                day_score.append(3)
-            elif name == 'Tuesday' or name =='Thursday' :
-                day_score.append(2)
-            else:
-                day_score.append(1)
-        return day_score
-
-
-    def create_table(start, end):
-        df = pd.DataFrame({'Date': pd.date_range(start, end)})
-        df['Day'] = df.Date.dt.weekday_name
-        df['Score'] = get_score(df.Date.dt.weekday_name)
-        df['Blue'] = 'NA'
-        df['Red'] = 'NA'
-        df['Silver'] = 'NA'
-        df['Gold'] = 'NA'
-        return df
-
-
-    # In[4]:
-
 
     start_date = str(year) + '-' + str(month) +'-01'
     end_date = str(year) + '-' + str(month) +'-'+str(no_of_days)
-
     df_teams = create_table(start_date, end_date)
-
 
     # #### List of random no. of employees
     # #### Also select last 2 weekend's work randomly
-
-    # In[5]:
-
-
     no_of_empl = random.randint(25,50)
 
-    #6 random employees worked 2 weekends back
+    # 6 random employees worked 2 weekends back
     weekend_1 = random.sample(range(1,no_of_empl+1), 6)
     weekend_2 = random.sample(range(1,no_of_empl+1), 6)
 
@@ -101,10 +94,6 @@ for run_times in range(1):
 
 
     # #### Random no. of employee on holiday for random amount of days
-
-    # In[6]:
-
-
     #5-10 employees taking a leave
     no_of_empl_leave = random.randint(5,10)
 
@@ -120,37 +109,7 @@ for run_times in range(1):
         days_leave = random.sample(list(df_teams['Date']), empl[4])
         empl.append(days_leave)
 
-    # print("[Employee name, If working this week, If worked one weekend back, if worked two weekends back, No of days on leave]")
-    # for empl in empl_list:
-    #     print(empl)
-
-
-    # In[7]:
-
-
-    def employee_schedule(start, end, empl_list):
-        df = pd.DataFrame({'Date': pd.date_range(start, end)})
-        for emp in empl_list:
-            df[emp[0]] = 0
-        return df
-
     df_emp = employee_schedule(start_date, end_date, empl_list)
-    # df_emp
-
-
-    # #### Randomly assigning work to employees
-
-    # In[8]:
-
-
-    def update_df_emp(teams, empl_choice, loc, score, df_emp):
-
-        for empl in empl_list:
-            if empl == empl_choice:
-                df_emp.loc[loc,empl[0]] += score*teams
-
-        return df_emp
-
 
 
     for loc,date in enumerate(df_teams['Date']):
@@ -232,13 +191,7 @@ for run_times in range(1):
                 update_df_emp(2,other_choice,loc, score, df_emp)
 
 
-    # In[9]:
-
-
     df_emp.loc['Total'] = df_emp.sum()
-
-
-    # In[10]:
 
 
     workload_array = df_emp.loc['Total','emp_01':]
@@ -250,15 +203,15 @@ for run_times in range(1):
     score_to_minimize = wordload_std * np.sqrt(no_of_empl) / np.sqrt(no_of_days)
 
 
-    # In[11]:
-
-
     tosave = [no_of_empl, no_of_days, wordload_std, std_no_of_empl, score_to_minimize]
     with open('std.csv','a') as f:
         writer = csv.writer(f)
         writer.writerow(tosave)
 
-    print(run_times)
+    if run_times % 10000 == 0 :
+        print(run_times)
+        stop = timeit.default_timer()
+        print('Time: ', stop - start)
     # In[12]:
 
 
