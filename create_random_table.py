@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import timeit
 import csv
+import os
 
 start = timeit.default_timer()
 
@@ -13,7 +14,13 @@ start = timeit.default_timer()
 import warnings
 warnings.filterwarnings("ignore")
 
-for run_times in range(20000):
+if not os.path.isfile('std.csv') :
+    tosave = ['a', 'b', 'c', 'd', 'e']
+    with open('std.csv','a') as f:
+        writer = csv.writer(f)
+        writer.writerow(tosave)
+
+for run_times in range(1):
     year = random.randint(1970,2100)
     month = random.randint(1,12)
     # print("Year :" , year," Month: ",month)
@@ -239,15 +246,14 @@ for run_times in range(20000):
         workload *= no_of_days / (no_of_days-empl_list[num][4])
         workload_array[num] = workload
     wordload_std = np.std(workload_array)
-    # print(sum(workload_array))
-    # workload_array
-    score_to_minimize = wordload_std * np.sqrt(no_of_empl)
+    std_no_of_empl = wordload_std * np.sqrt(no_of_empl)
+    score_to_minimize = wordload_std * np.sqrt(no_of_empl) / np.sqrt(no_of_days)
 
 
     # In[11]:
 
 
-    tosave = [no_of_empl, no_of_days, wordload_std, score_to_minimize]
+    tosave = [no_of_empl, no_of_days, wordload_std, std_no_of_empl, score_to_minimize]
     with open('std.csv','a') as f:
         writer = csv.writer(f)
         writer.writerow(tosave)
