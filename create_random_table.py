@@ -2,14 +2,15 @@ import random
 import calendar
 import pandas as pd
 import numpy as np
+from numpy.random import choice
 import timeit
 import csv
 import os
-
-start = timeit.default_timer()
-
 import warnings
+
+
 warnings.filterwarnings("ignore")
+start = timeit.default_timer()
 
 if not os.path.isfile('std.csv') :
     tosave = ['a', 'b', 'c', 'd', 'e']
@@ -17,9 +18,10 @@ if not os.path.isfile('std.csv') :
         writer = csv.writer(f)
         writer.writerow(tosave)
 
+
+
 # #### Create month table
 def get_score(weekday_name):
-#     print(weekday_name)
     day_score = []
     for name in weekday_name:
         if name == 'Saturday' :
@@ -58,7 +60,20 @@ def update_df_emp(teams, empl_choice, loc, score, df_emp):
 
     return df_emp
 
-for run_times in range(100000):
+def weighted_choice(free_list):
+    totals = []
+    running_total = 0
+
+    for w in [empl[6] for empl in free_list]:
+        running_total += w
+        totals.append(running_total)
+
+    rnd = random.random() * running_total
+    for i, total in enumerate(totals):
+        if rnd < total:
+            return free_list[i]
+
+for run_times in range(1000):
     # #### Random year & month
     year = random.randint(1970,2100)
     month = random.randint(1,12)
@@ -69,13 +84,16 @@ for run_times in range(100000):
 
     start_date = str(year) + '-' + str(month) +'-01'
     end_date = str(year) + '-' + str(month) +'-'+str(no_of_days)
+
     df_teams = create_table(start_date, end_date)
+
 
     # #### List of random no. of employees
     # #### Also select last 2 weekend's work randomly
+
     no_of_empl = random.randint(25,50)
 
-    # 6 random employees worked 2 weekends back
+    #6 random employees worked 2 weekends back
     weekend_1 = random.sample(range(1,no_of_empl+1), 6)
     weekend_2 = random.sample(range(1,no_of_empl+1), 6)
 
@@ -92,8 +110,8 @@ for run_times in range(100000):
         else:
             empl_list.append(['emp_' + str(i), 0, two_weekend_back, one_weekend_back, 0])
 
-
     # #### Random no. of employee on holiday for random amount of days
+
     #5-10 employees taking a leave
     no_of_empl_leave = random.randint(5,10)
 
@@ -108,10 +126,14 @@ for run_times in range(100000):
     for num,empl in enumerate(empl_list):
         days_leave = random.sample(list(df_teams['Date']), empl[4])
         empl.append(days_leave)
+        empl.append(10000)
+
 
     df_emp = employee_schedule(start_date, end_date, empl_list)
 
+    # #### Randomly assigning work to employees
 
+    df_emp.loc['Total'] = 0.0001
     for loc,date in enumerate(df_teams['Date']):
 
         score = df_teams.loc[loc,'Score']
@@ -119,21 +141,24 @@ for run_times in range(100000):
         if(date.weekday_name == 'Saturday' or date.weekday_name == 'Sunday'):
 
             free_list = []
-            for i in empl_list:
-                if ((i[2] == 0 or i[3] == 0) and i[1] == 0) and (date not in empl_list[5]):
-                    free_list.append(i)
+            for empl in empl_list:
+                if ((empl[2] == 0 or empl[3] == 0) and empl[1] == 0) and (date not in empl[5]):
+                    free_list.append(empl)
 
-            gold_choice = random.choice(free_list)
+            gold_choice = weighted_choice(free_list)
             df_teams.at[loc, 'Gold'] = gold_choice[0]
 
+            free_list = [x for x in free_list if x != gold_choice]
+
             #assign same to one of the other three team (red,blue,silver)
-            with_gold = random.choice(['Red','Blue','Silver'])
+            with_gold = choice(['Red','Blue','Silver'])
             df_teams.at[loc, with_gold] = gold_choice[0]
             update_df_emp(2, gold_choice, loc, score, df_emp)
 
             #assign different employees to remaining 2 team
-            other_choice_1 = random.choice([x for x in free_list if x != gold_choice])
-            other_choice_2 = random.choice([x for x in free_list if x != gold_choice and x != other_choice_1])
+            other_choice_1 = weighted_choice(free_list)
+            free_list = [x for x in free_list if x != other_choice_1]
+            other_choice_2 = weighted_choice(free_list)
 
             if with_gold == 'Blue':
                 df_teams.at[loc, 'Red'] = other_choice_1[0]
@@ -165,18 +190,24 @@ for run_times in range(100000):
 
     #   Weekday
         else:
+            free_list = []
+            for empl in empl_list:
+                if date not in empl[5]:
+                    free_list.append(empl)
+
             #Get random choice for Gold
-            gold_choice = random.choice(empl_list)
+            gold_choice = weighted_choice(free_list)
             df_teams.at[loc, 'Gold'] = gold_choice[0]
 
             #assign same to one of the other three team (red,blue,silver)
-            with_gold = random.choice(['Red','Blue','Silver'])
+            with_gold = choice(['Red','Blue','Silver'])
             df_teams.at[loc, with_gold] = gold_choice[0]
 
             update_df_emp(2, gold_choice, loc, score, df_emp)
+            free_list = [x for x in empl_list if x != gold_choice]
 
             #assign different employee to remaining 2 team
-            other_choice = random.choice([x for x in empl_list if x != gold_choice])
+            other_choice = weighted_choice(free_list)
             if with_gold == 'Blue':
                 df_teams.at[loc, 'Red'] = other_choice[0]
                 df_teams.at[loc, 'Silver'] = other_choice[0]
@@ -190,9 +221,10 @@ for run_times in range(100000):
                 df_teams.at[loc, 'Red'] = other_choice[0]
                 update_df_emp(2,other_choice,loc, score, df_emp)
 
-
-    df_emp.loc['Total'] = df_emp.sum()
-
+        df_emp.loc['Total'] = 0.0001
+        df_emp.loc['Total'] = df_emp.sum()
+        for empl in empl_list:
+            empl[6] = 1 / df_emp.loc['Total'][empl[0]]
 
     workload_array = df_emp.loc['Total','emp_01':]
     for num,workload in enumerate(workload_array):
@@ -208,12 +240,10 @@ for run_times in range(100000):
         writer = csv.writer(f)
         writer.writerow(tosave)
 
-    if run_times % 10000 == 0 :
+    if run_times % 500 == 0 :
         print(run_times)
         stop = timeit.default_timer()
         print('Time: ', stop - start)
-    # In[12]:
-
 
 stop = timeit.default_timer()
 
