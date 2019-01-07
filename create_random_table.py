@@ -77,12 +77,12 @@ def best_choice(free_list):
     highest = -1
     best = []
 
-    for empl in empl_list:
+    for empl in free_list:
         if empl[6] > highest:
             highest = empl[6]
             best = empl
 
-    return empl
+    return best
 
 def assign_schedule(df_teams, df_emp, empl_list):
 
@@ -179,7 +179,7 @@ def assign_schedule(df_teams, df_emp, empl_list):
 
     return df_teams, df_emp, empl_list
 
-for run_times in range(1000):
+for run_times in range(10000):
     # #### Random year & month
     year = random.randint(1970,2100)
     month = random.randint(1,12)
@@ -239,7 +239,7 @@ for run_times in range(1000):
     df_emp.loc['Total'] = 0.0001
 
     # #### Randomly assigning work to employees
-    df_teams, df_emp, empl_list = assign_schedule(df_emp, df_teams, empl_list)
+    df_teams, df_emp, empl_list = assign_schedule(df_teams, df_emp, empl_list)
 
     workload_array = df_emp.loc['Total','emp_01':]
     for num,workload in enumerate(workload_array):
@@ -255,7 +255,7 @@ for run_times in range(1000):
         writer = csv.writer(f)
         writer.writerow(tosave)
 
-    if run_times % 500 == 0 :
+    if run_times % 100 == 0 :
         print(run_times)
         stop = timeit.default_timer()
         print('Time: ', stop - start)
