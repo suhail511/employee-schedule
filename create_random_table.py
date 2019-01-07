@@ -73,6 +73,112 @@ def weighted_choice(free_list):
         if rnd < total:
             return free_list[i]
 
+def best_choice(free_list):
+    highest = -1
+    best = []
+
+    for empl in empl_list:
+        if empl[6] > highest:
+            highest = empl[6]
+            best = empl
+
+    return empl
+
+def assign_schedule(df_teams, df_emp, empl_list):
+
+    for loc,date in enumerate(df_teams['Date']):
+
+        score = df_teams.loc[loc,'Score']
+        #weekend
+        if(date.weekday_name == 'Saturday' or date.weekday_name == 'Sunday'):
+            free_list = []
+            for empl in empl_list:
+                if ((empl[2] == 0 or empl[3] == 0) and empl[1] == 0) and (date not in empl[5]):
+                    free_list.append(empl)
+
+            gold_choice = best_choice(free_list)
+            df_teams.at[loc, 'Gold'] = gold_choice[0]
+
+            free_list = [x for x in free_list if x != gold_choice]
+
+            #assign same to one of the other three team (red,blue,silver)
+            with_gold = choice(['Red','Blue','Silver'])
+            df_teams.at[loc, with_gold] = gold_choice[0]
+            update_df_emp(2, gold_choice, loc, score, df_emp)
+
+            #assign different employees to remaining 2 team
+            other_choice_1 = best_choice(free_list)
+            free_list = [x for x in free_list if x != other_choice_1]
+            other_choice_2 = best_choice(free_list)
+
+            if with_gold == 'Blue':
+                df_teams.at[loc, 'Red'] = other_choice_1[0]
+                df_teams.at[loc, 'Silver'] = other_choice_2[0]
+                update_df_emp(1,other_choice_1,loc, score, df_emp)
+                update_df_emp(1,other_choice_2,loc, score, df_emp)
+            elif with_gold == 'Red':
+                df_teams.at[loc, 'Blue'] = other_choice_1[0]
+                df_teams.at[loc, 'Silver'] = other_choice_2[0]
+                update_df_emp(1,other_choice_1,loc, score, df_emp)
+                update_df_emp(1,other_choice_2,loc, score, df_emp)
+            else:
+                df_teams.at[loc, 'Blue'] = other_choice_1[0]
+                df_teams.at[loc, 'Red'] = other_choice_2[0]
+                update_df_emp(1,other_choice_1,loc, score, df_emp)
+                update_df_emp(1,other_choice_2,loc, score, df_emp)
+
+            #update weekend work status
+            for i in range(len(empl_list)):
+                if(empl_list[i]==gold_choice or empl_list[i]==other_choice_1 or empl_list[i]==other_choice_2):
+                    empl_list[i][1] = 1
+
+            if(date.weekday_name == 'Sunday'):
+                for i in range(len(empl_list)):
+                    empl_list[i][3] = empl_list[i][2]
+                    empl_list[i][2] = empl_list[i][1]
+                    empl_list[i][1] = 0
+
+
+    #   Weekday
+        else:
+            free_list = []
+            for empl in empl_list:
+                if date not in empl[5]:
+                    free_list.append(empl)
+
+            #Get random choice for Gold
+            gold_choice = best_choice(free_list)
+            df_teams.at[loc, 'Gold'] = gold_choice[0]
+
+            #assign same to one of the other three team (red,blue,silver)
+            with_gold = choice(['Red','Blue','Silver'])
+            df_teams.at[loc, with_gold] = gold_choice[0]
+
+            update_df_emp(2, gold_choice, loc, score, df_emp)
+            free_list = [x for x in empl_list if x != gold_choice]
+
+            #assign different employee to remaining 2 team
+            other_choice = best_choice(free_list)
+            if with_gold == 'Blue':
+                df_teams.at[loc, 'Red'] = other_choice[0]
+                df_teams.at[loc, 'Silver'] = other_choice[0]
+                update_df_emp(2,other_choice,loc, score, df_emp)
+            elif with_gold == 'Red':
+                df_teams.at[loc, 'Blue'] = other_choice[0]
+                df_teams.at[loc, 'Silver'] = other_choice[0]
+                update_df_emp(2,other_choice,loc, score, df_emp)
+            else:
+                df_teams.at[loc, 'Blue'] = other_choice[0]
+                df_teams.at[loc, 'Red'] = other_choice[0]
+                update_df_emp(2,other_choice,loc, score, df_emp)
+
+        df_emp.loc['Total'] = 0.0001
+        df_emp.loc['Total'] = df_emp.sum()
+        for empl in empl_list:
+            empl[6] = 1 / df_emp.loc['Total'][empl[0]]
+
+    return df_teams, df_emp, empl_list
+
 for run_times in range(1000):
     # #### Random year & month
     year = random.randint(1970,2100)
@@ -130,101 +236,10 @@ for run_times in range(1000):
 
 
     df_emp = employee_schedule(start_date, end_date, empl_list)
+    df_emp.loc['Total'] = 0.0001
 
     # #### Randomly assigning work to employees
-
-    df_emp.loc['Total'] = 0.0001
-    for loc,date in enumerate(df_teams['Date']):
-
-        score = df_teams.loc[loc,'Score']
-        #weekend
-        if(date.weekday_name == 'Saturday' or date.weekday_name == 'Sunday'):
-
-            free_list = []
-            for empl in empl_list:
-                if ((empl[2] == 0 or empl[3] == 0) and empl[1] == 0) and (date not in empl[5]):
-                    free_list.append(empl)
-
-            gold_choice = weighted_choice(free_list)
-            df_teams.at[loc, 'Gold'] = gold_choice[0]
-
-            free_list = [x for x in free_list if x != gold_choice]
-
-            #assign same to one of the other three team (red,blue,silver)
-            with_gold = choice(['Red','Blue','Silver'])
-            df_teams.at[loc, with_gold] = gold_choice[0]
-            update_df_emp(2, gold_choice, loc, score, df_emp)
-
-            #assign different employees to remaining 2 team
-            other_choice_1 = weighted_choice(free_list)
-            free_list = [x for x in free_list if x != other_choice_1]
-            other_choice_2 = weighted_choice(free_list)
-
-            if with_gold == 'Blue':
-                df_teams.at[loc, 'Red'] = other_choice_1[0]
-                df_teams.at[loc, 'Silver'] = other_choice_2[0]
-                update_df_emp(1,other_choice_1,loc, score, df_emp)
-                update_df_emp(1,other_choice_2,loc, score, df_emp)
-            elif with_gold == 'Red':
-                df_teams.at[loc, 'Blue'] = other_choice_1[0]
-                df_teams.at[loc, 'Silver'] = other_choice_2[0]
-                update_df_emp(1,other_choice_1,loc, score, df_emp)
-                update_df_emp(1,other_choice_2,loc, score, df_emp)
-            else:
-                df_teams.at[loc, 'Blue'] = other_choice_1[0]
-                df_teams.at[loc, 'Red'] = other_choice_2[0]
-                update_df_emp(1,other_choice_1,loc, score, df_emp)
-                update_df_emp(1,other_choice_2,loc, score, df_emp)
-
-            #update weekend work status
-            for i in range(len(empl_list)):
-                if(empl_list[i]==gold_choice or empl_list[i]==other_choice_1 or empl_list[i]==other_choice_2):
-                    empl_list[i][1] = 1
-
-            if(date.weekday_name == 'Sunday'):
-                for i in range(len(empl_list)):
-                    empl_list[i][3] = empl_list[i][2]
-                    empl_list[i][2] = empl_list[i][1]
-                    empl_list[i][1] = 0
-
-
-    #   Weekday
-        else:
-            free_list = []
-            for empl in empl_list:
-                if date not in empl[5]:
-                    free_list.append(empl)
-
-            #Get random choice for Gold
-            gold_choice = weighted_choice(free_list)
-            df_teams.at[loc, 'Gold'] = gold_choice[0]
-
-            #assign same to one of the other three team (red,blue,silver)
-            with_gold = choice(['Red','Blue','Silver'])
-            df_teams.at[loc, with_gold] = gold_choice[0]
-
-            update_df_emp(2, gold_choice, loc, score, df_emp)
-            free_list = [x for x in empl_list if x != gold_choice]
-
-            #assign different employee to remaining 2 team
-            other_choice = weighted_choice(free_list)
-            if with_gold == 'Blue':
-                df_teams.at[loc, 'Red'] = other_choice[0]
-                df_teams.at[loc, 'Silver'] = other_choice[0]
-                update_df_emp(2,other_choice,loc, score, df_emp)
-            elif with_gold == 'Red':
-                df_teams.at[loc, 'Blue'] = other_choice[0]
-                df_teams.at[loc, 'Silver'] = other_choice[0]
-                update_df_emp(2,other_choice,loc, score, df_emp)
-            else:
-                df_teams.at[loc, 'Blue'] = other_choice[0]
-                df_teams.at[loc, 'Red'] = other_choice[0]
-                update_df_emp(2,other_choice,loc, score, df_emp)
-
-        df_emp.loc['Total'] = 0.0001
-        df_emp.loc['Total'] = df_emp.sum()
-        for empl in empl_list:
-            empl[6] = 1 / df_emp.loc['Total'][empl[0]]
+    df_teams, df_emp, empl_list = assign_schedule(df_emp, df_teams, empl_list)
 
     workload_array = df_emp.loc['Total','emp_01':]
     for num,workload in enumerate(workload_array):
