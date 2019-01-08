@@ -76,6 +76,7 @@ def weighted_choice(free_list):
 def best_choice(free_list):
     highest = -1
     best = []
+    random.shuffle(free_list)
 
     for empl in free_list:
         if empl[6] > highest:
