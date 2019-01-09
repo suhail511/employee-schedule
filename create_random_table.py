@@ -56,7 +56,7 @@ def update_df_emp(teams, empl_choice, loc, score, df_emp):
 
     for empl in empl_list:
         if empl == empl_choice:
-            df_emp.loc[loc,empl[0]] += score*teams
+            df_emp.loc[loc,empl[0]] += score*teams*empl[7]
 
     return df_emp
 
@@ -180,7 +180,7 @@ def assign_schedule(df_teams, df_emp, empl_list):
 
     return df_teams, df_emp, empl_list
 
-for run_times in range(10000):
+for run_times in range(1000):
     # #### Random year & month
     year = random.randint(1970,2100)
     month = random.randint(1,12)
@@ -234,13 +234,20 @@ for run_times in range(10000):
         days_leave = random.sample(list(df_teams['Date']), empl[4])
         empl.append(days_leave)
         empl.append(10000)
+        empl.append(no_of_days/(no_of_days-empl[4]))
 
 
     df_emp = employee_schedule(start_date, end_date, empl_list)
     df_emp.loc['Total'] = 0.0001
 
+    ## Iterate through Highest scores first
+    # df_teams = df_teams.sort_values(by=['Score'], ascending=False)
+
     # #### Randomly assigning work to employees
     df_teams, df_emp, empl_list = assign_schedule(df_teams, df_emp, empl_list)
+
+    ## Reorder df by date
+    # df_teams = df_teams.sort_values(by=['Date'])
 
     workload_array = df_emp.loc['Total','emp_01':]
     for num,workload in enumerate(workload_array):
@@ -256,8 +263,8 @@ for run_times in range(10000):
         writer = csv.writer(f)
         writer.writerow(tosave)
 
-    if run_times % 100 == 0 :
-        print(run_times)
+    if run_times % 100 == 0:
+        print(run_times+1)
         stop = timeit.default_timer()
         print('Time: ', stop - start)
 
