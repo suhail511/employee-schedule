@@ -45,34 +45,30 @@ This was to check if the schedule followed all the rules mentioned above. The mo
 
 Example 1             |  Example 2
 :-------------------------:|:-------------------------:
-<img src="https://github.com/suhail511/employee-schedule/blob/master/images/table-random-01.jpg?raw=true" width="375" height="700">  |  <img src="https://github.com/suhail511/employee-schedule/blob/master/images/table-random-02.jpg?raw=true" width="375" height="720">
+<img src="https://github.com/suhail511/employee-schedule/blob/master/images/table-random-01.jpg?raw=true" width="400">  |  <img src="https://github.com/suhail511/employee-schedule/blob/master/images/table-random-02.jpg?raw=true" width="400">
 
-I ran these several times and stored the ```std``` in ```std-random.csv```. Plotting the ```std``` with the number of employees(chosen randomly) of the month revealed this graph.
-
-
-![](images/graph-random-01.jpg)
+I ran these several times and stored the ```std``` in ```std-random.csv```. Plotting the ```std``` with the number of employees(chosen randomly) of the month revealed the first graph. Also, plotting the ```std``` with the number of days in the month(chosen randomly) of the month revealed another fact.
 
 
-Also, plotting the ```std``` with the number of days in the month(chosen randomly) of the month revealed this graph.
-
-
-![](images/graph-random-02.jpg)
+std v/s no_of_employees             |  std v/s no_of_days
+:-------------------------:|:-------------------------:
+<img src="https://raw.githubusercontent.com/suhail511/employee-schedule/master/images/graph-random-01.jpg" width="375">  |  <img src="https://raw.githubusercontent.com/suhail511/employee-schedule/master/images/graph-random-02.jpg" width="375">
 
 
 It can be seen that the ```std``` decreases with increased number of employees and increases with increased number of days.
 I had to correct this metric by multiplying with the square-root of number of employees and dividing by the square-root of number of days. This fixed the issue and I go the following graph as the revised metric to measure.
 
 
-![](images/graph-random-03.jpg)
+std v/s no_of_employees             |  std v/s no_of_days
+:-------------------------:|:-------------------------:
+<img src="https://raw.githubusercontent.com/suhail511/employee-schedule/master/images/graph-random-04.jpg" width="375">  |  <img src="https://raw.githubusercontent.com/suhail511/employee-schedule/master/images/graph-random-03.jpg" width="375">
 
-
-
-![](images/graph-random-04.jpg)
 
 
 After fixing the evaluation metric, we can now measure the performance of the system.
 
-![](images/result-random.jpg)
+<img src="https://raw.githubusercontent.com/suhail511/employee-schedule/master/images/result-random.jpg" width="275">
+
 
 We see the mean ```std``` at 7.6, which is a bad result as expected. This is because we are randomly assigning work to the employees.
 
@@ -86,7 +82,7 @@ Now I added some bais while selecting. The employees were given a weight, based 
 
 This the difference in results obtained.
 
-![](images/result-weighted.jpg)
+<img src="https://raw.githubusercontent.com/suhail511/employee-schedule/master/images/result-weighted.jpg" width="275">
 
 We see the mean '''std''' change to  4.44, which is an improvement to random selection, as expected.
 
@@ -100,7 +96,7 @@ I further modified the bais while selecting. The employee selection was based on
 
 This the difference in results obtained.
 
-![](images/result-best.jpg)
+<img src="https://raw.githubusercontent.com/suhail511/employee-schedule/master/images/result-best.jpg" width="275">
 
 We see the mean ```std``` further improve to to  2.7, which is an improvement to weighted selection.
 
