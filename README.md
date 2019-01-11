@@ -37,9 +37,9 @@ Our aim is to assign work, such that the total score for each employee at the en
 
 At first I created the code such that all the rules are followed and assigned employees work randomly.
 
-  '''bash
+  ```bash
   assign_schedule('random')
-  '''
+  ```
 
 This was to check if the schedule followed all the rules mentioned above. The month and year were selected at random.
 
@@ -47,15 +47,15 @@ This was to check if the schedule followed all the rules mentioned above. The mo
 
 ![](images/table-random-02.jpg)
 
-I ran these several times and stored the '''std''' in '''std-random.csv'''. Plotting the '''std''' with the number of employees(chosen randomly) of the month revealed this graph.
+I ran these several times and stored the ```std``` in ```std-random.csv```. Plotting the ```std``` with the number of employees(chosen randomly) of the month revealed this graph.
 
 ![](images/graph-random-01.jpg)
 
-Also, plotting the '''std''' with the number of days in the month(chosen randomly) of the month revealed this graph.
+Also, plotting the ```std``` with the number of days in the month(chosen randomly) of the month revealed this graph.
 
 ![](images/graph-random-02.jpg)
 
-It can be seen that the '''std''' decreases with increased number of employees and increases with increased number of days.
+It can be seen that the ```std``` decreases with increased number of employees and increases with increased number of days.
 I had to correct this metric by multiplying with the square-root of number of employees and dividing by the square-root of number of days. This fixed the issue and I go the following graph as the revised metric to measure.
 
 ![](images/graph-random-03.jpg)
@@ -63,36 +63,45 @@ I had to correct this metric by multiplying with the square-root of number of em
 ![](images/graph-random-04.jpg)
 
 After fixing the evaluation metric, we can now measure the performance of the system.
+
 ![](images/result-random.jpg)
-We see the mean '''std''' at 7.6, which is a bad result as expected. This is because we are randomly assigning work to the employees
+
+We see the mean ```std``` at 7.6, which is a bad result as expected. This is because we are randomly assigning work to the employees.
 
 ### Weighted Selection
 
 Now I added some bais while selecting. The employees were given a weight, based on the amount of '''score''' they currently have done. Employees who had done work (and had a higher '''score'''), were less likely to be chosen again
 
-  '''bash
+  ```bash
   assign_schedule('weighted')
-  '''
+  ```
 
 This the difference in results obtained.
+
 ![](images/result-weighted.jpg)
+
 We see the mean '''std''' change to  4.44, which is an improvement to random selection, as expected.
 
 ### Best Selection
 
 I further modified the bais while selecting. The employee selection was based on the one who had the least '''score'''. Employees who had done least amount of work, were selected.
 
-  '''bash
+  ```bash
   assign_schedule('best')
-  '''
+  ```
 
 This the difference in results obtained.
 ![](images/result-best.jpg)
-We see the mean '''std''' further improve to to  2.7, which is an improvement to weighted selection.
+We see the mean ```std``` further improve to to  2.7, which is an improvement to weighted selection.
+
+### Future work
+
+I am trying to implement this using Machine Learning, to get the reduce the ```std``` even further and get better results.
 
 ## How you can run
 
 1. Download and unzip [this entire repository from GitHub](https://github.com/suhail511/employee-schedule), either interactively, or by entering the following in your Terminal.
+
     ```bash
     git clone https://github.com/suhail511/employee-schedule
     ```
