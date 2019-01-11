@@ -43,24 +43,32 @@ At first I created the code such that all the rules are followed and assigned em
 
 This was to check if the schedule followed all the rules mentioned above. The month and year were selected at random.
 
-<img src="https://github.com/suhail511/employee-schedule/blob/master/images/table-random-01.jpg?raw=true" width="375" height="700">
-
-<img src="https://github.com/suhail511/employee-schedule/blob/master/images/table-random-02.jpg?raw=true" width="375" height="700">
+Example 1             |  Example 2
+:-------------------------:|:-------------------------:
+<img src="https://github.com/suhail511/employee-schedule/blob/master/images/table-random-01.jpg?raw=true" width="375" height="700">  |  <img src="https://github.com/suhail511/employee-schedule/blob/master/images/table-random-02.jpg?raw=true" width="375" height="720">
 
 I ran these several times and stored the ```std``` in ```std-random.csv```. Plotting the ```std``` with the number of employees(chosen randomly) of the month revealed this graph.
 
+
 ![](images/graph-random-01.jpg)
+
 
 Also, plotting the ```std``` with the number of days in the month(chosen randomly) of the month revealed this graph.
 
+
 ![](images/graph-random-02.jpg)
+
 
 It can be seen that the ```std``` decreases with increased number of employees and increases with increased number of days.
 I had to correct this metric by multiplying with the square-root of number of employees and dividing by the square-root of number of days. This fixed the issue and I go the following graph as the revised metric to measure.
 
+
 ![](images/graph-random-03.jpg)
 
+
+
 ![](images/graph-random-04.jpg)
+
 
 After fixing the evaluation metric, we can now measure the performance of the system.
 
