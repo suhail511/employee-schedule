@@ -180,10 +180,10 @@ def assign_schedule(df_teams, df_emp, empl_list):
 
     return df_teams, df_emp, empl_list
 
-for run_times in range(1000):
-    # #### Random year & month
-    year = random.randint(1970,2100)
-    month = random.randint(1,12)
+for run_times in range(1):
+    # #### year & month
+    year = int(input("Enter year(1970-): "))
+    month = int(input("Enter month(1-12): "))
 
     #no of days
     start_day, no_of_days = calendar.monthrange(year, month)
@@ -246,28 +246,30 @@ for run_times in range(1000):
     # #### Randomly assigning work to employees
     df_teams, df_emp, empl_list = assign_schedule(df_teams, df_emp, empl_list)
 
+    print(df_teams)
+
     ## Reorder df by date
     # df_teams = df_teams.sort_values(by=['Date'])
 
-    workload_array = df_emp.loc['Total','emp_01':]
-    for num,workload in enumerate(workload_array):
-        workload *= no_of_days / (no_of_days-empl_list[num][4])
-        workload_array[num] = workload
-    wordload_std = np.std(workload_array)
-    std_no_of_empl = wordload_std * np.sqrt(no_of_empl)
-    score_to_minimize = wordload_std * np.sqrt(no_of_empl) / np.sqrt(no_of_days)
+    # workload_array = df_emp.loc['Total','emp_01':]
+    # for num,workload in enumerate(workload_array):
+    #     workload *= no_of_days / (no_of_days-empl_list[num][4])
+    #     workload_array[num] = workload
+    # wordload_std = np.std(workload_array)
+    # std_no_of_empl = wordload_std * np.sqrt(no_of_empl)
+    # score_to_minimize = wordload_std * np.sqrt(no_of_empl) / np.sqrt(no_of_days)
 
 
-    tosave = [no_of_empl, no_of_days, wordload_std, std_no_of_empl, score_to_minimize]
-    with open('std.csv','a') as f:
-        writer = csv.writer(f)
-        writer.writerow(tosave)
+    # tosave = [no_of_empl, no_of_days, wordload_std, std_no_of_empl, score_to_minimize]
+    # with open('std.csv','a') as f:
+    #     writer = csv.writer(f)
+    #     writer.writerow(tosave)
 
-    if run_times % 100 == 0:
-        print(run_times+1)
-        stop = timeit.default_timer()
-        print('Time: ', stop - start)
+    # if run_times % 100 == 0:
+    #     print(run_times+1)
+    #     stop = timeit.default_timer()
+    #     print('Time: ', stop - start)
 
-stop = timeit.default_timer()
+# stop = timeit.default_timer()
 
-print('Time: ', stop - start)
+# print('Time: ', stop - start)
