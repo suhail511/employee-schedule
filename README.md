@@ -116,6 +116,11 @@ I am trying to implement this using Machine Learning, to get the reduce the ```s
     ```bash
     cd employee-schedule
     ```
+3. Open terminal in this directory and run
+
+  ```bash
+  python create_table.py
+  ```
 
 Enter the year and month, it will produce a schedule for random number of employees.
 
