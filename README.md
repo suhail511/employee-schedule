@@ -91,7 +91,9 @@ I further modified the bais while selecting. The employee selection was based on
   ```
 
 This the difference in results obtained.
+
 ![](images/result-best.jpg)
+
 We see the mean ```std``` further improve to to  2.7, which is an improvement to weighted selection.
 
 ### Future work
