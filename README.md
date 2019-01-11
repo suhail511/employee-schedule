@@ -14,8 +14,8 @@ In order to run these scripts, you'll need the following libraries.
 
 These are the rules that must be followed:
 
-1. Four coloured team
-2. Each team must be covered by 1 person everyday
+* Four coloured team
+* Each team must be covered by 1 person everyday
 * On weekdays, one employee can cover 2 teams
 * On weekends, employees can only be on one team, but can cover 2 teams if in gold
 * One cannot do both Red and Blue on weekends
