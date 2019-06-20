@@ -1,0 +1,52 @@
+Employees,Team Colour,Off-Service,Worked the weekend before?,Dates requested to WORK,Dates requested to not work,Formal days off,Max shifts in 28 days,,
+Bloom,Blue,0,0,,May 18-26,7,5,,
+Shahmoradi,Blue,0,0,May 29,"May 18-19
+May 22-23
+May 31-June 2",1,6,,
+Postnikoff,Blue,1,0,,"May 10-13
+May 25-June 2",11,4,15,BLUE total
+Gordon,Red,0,0,,,0,7,,
+Appelton,Red,0,0,,"May 18-26
+June 1",7,5,,
+Lange,Red,1,0,,"May 6-12
+June 1-2
+May 19
+May 26",7,5,,
+Head,Red,0,1,,May 25-June 2,7,5,22,RED Total
+Oro,Silver,0,0,,May 11-12,0,7,,
+Verity,Silver,1,0,,May 15-21,6,5,,
+Swami,Silver,0,0,,,0,7,,
+Rashad,Silver,0,0,,Jun 1-2,0,7,26,SILVER Total
+,,,,,,,,,
+Off-service = cannot cover 2 teams on Sat or Sun unless the 2nd team is GOLD,,,,,,,,,
+"An employee cannot have shifts on 3 weekends in a row. If an employee is on call for 2 weekends in a row (Sat + Sun), they must have the subsequent Fri-Sun off",,,,,,,,,
+,,,,,,,,,
+Date,Day,BLUE,RED,SILVER,GOLD,,,,
+"May 06, 2019",Monday,Gordon,Gordon,Oro,Oro,,,,
+"May 07, 2019",Tuesday,Torabi,Torabi,Swami,Swami,,,,
+"May 08, 2019",Wednesday,Postnikoff,Head,Head,Postnikoff,,,,
+"May 09, 2019",Thursday,Bloom,Gordon,Bloom,Bloom,,,,
+"May 10, 2019",Friday,Shahmoradi,Appelton,Shahmoradi,Appelton,,,,
+"May 11, 2019",Saturday,Bloom,Head,Wheeler,Bloom,,,,
+"May 12, 2019",Sunday,Murthy,Appelton,Verity,Appelton,,,,
+"May 13, 2019",Monday,Torabi,Torabi,Oro,Oro,,,,
+"May 14, 2019",Tuesday,Shahmoradi,Shahmoradi,Rashad,Rashad,,,,
+"May 15, 2019",Wednesday,Oro,Gordon,Oro,Gordon,,,,
+"May 16, 2019",Thursday,Bloom,Appelton,Bloom,Appelton,,,,
+"May 17, 2019",Friday,Rashad,Lange,Rashad,Lange,,,,
+"May 18, 2019",Saturday,Postnikoff,Head,Swami,Postnikoff,,,,
+"May 19, 2019",Sunday,Torabi,Lange,Rashad,Rashad,,,,
+"May 20, 2019",Monday,Postnikoff,Head,Swami,Postnikoff,,,,
+"May 21, 2019",Tuesday,Oro,Lange,Oro,Lange,,,,
+"May 22, 2019",Wednesday,Postnikoff,Rashad,Rashad,Postnikoff,,,,
+"May 23, 2019",Thursday,Head,Head,Swami,Head,,,,
+"May 24, 2019",Friday,Verity,Lange,Verity,Lange,,,,
+"May 25, 2019",Saturday,Shahmoradi,Gordon,Rashad,Shahmoradi,,,,
+"May 26, 2019",Sunday,Parekh,Lange,Oro,Oro,,,,
+"May 27, 2019",Monday,Appelton,Appelton,Verity,Verity,,,,
+"May 28, 2019",Tuesday,Torabi,Swami,Swami,Torabi,,,,
+"May 29, 2019",Wednesday,Shahmoradi,Lange,Shahmoradi,Lange,,,,
+"May 30, 2019",Thursday,Appelton,Appelton,Verity,Verity,,,,
+"May 31, 2019",Friday,Bloom,Gordon,Bloom,Gordon,,,,
+"June 01, 2019",Saturday,Torabi,Mayba,Verity,Torabi,,,,
+"June 02, 2019",Sunday,Bloom,Gordon,Oro,Gordon,,,,
